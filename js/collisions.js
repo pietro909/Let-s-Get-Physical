@@ -21,6 +21,16 @@ function startScene() {
     renderer.setSize(640, 480);
 
     scene = new Physijs.Scene();
+    scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+    scene.addEventListener(
+		'update',
+		function()
+        {
+			scene.simulate( undefined, 1 );
+console.log('funzionooo');
+			physics_stats.update();
+		}
+	);
 
     camera = new THREE.PerspectiveCamera(50, 640 / 480, 0.1, 8000);
     camera.position.set(0, 0, 40);
@@ -43,10 +53,17 @@ function startScene() {
             color: 0xff4488
         }
     );
+    var physijsMaterial = Physijs.createMaterial(
+        material,
+        0.6, // high friction
+        0.3 // low restitution
+    );
 
-    var mesh = new Physijs.BoxMesh( cubeGeometry, material );
+    var mesh = new Physijs.BoxMesh( cubeGeometry, physijsMaterial );
 
     scene.add(mesh);
+
+    scene.simulate();
 
     function animate()
     {
