@@ -5,8 +5,7 @@
  */
 
 // put the variables you want to access from the console here
-var container, renderer, scene, camera, materials = {};
-var intersectables = [];
+var container, renderer, scene, camera;
 
 function startScene() {
     'use strict';
