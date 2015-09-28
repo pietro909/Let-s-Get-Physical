@@ -5,12 +5,12 @@
  */
 
 // put the variables you want to access from the console here
-var container, renderer, scene, camera;
+var container, renderer, scene, camera, letters;
 
 function startScene() {
     'use strict';
 
-    Physijs.scripts.worker = '/js/lib/physis_worker.js';
+    Physijs.scripts.worker = '/js/lib/physijs_worker.js';
     Physijs.scripts.ammo = '/js/lib/ammo.js';
 
     // boilerplate
@@ -22,15 +22,6 @@ function startScene() {
 
     scene = new Physijs.Scene();
     scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
-    scene.addEventListener(
-		'update',
-		function()
-        {
-			scene.simulate( undefined, 1 );
-console.log('funzionooo');
-			physics_stats.update();
-		}
-	);
 
     camera = new THREE.PerspectiveCamera(50, 640 / 480, 0.1, 8000);
     camera.position.set(0, 0, 40);
@@ -47,27 +38,72 @@ console.log('funzionooo');
     theLight2.position.set(10, 10, -20);
     scene.add(theLight2);
 
-    var cubeGeometry = new THREE.BoxGeometry(4, 4, 4);
-    var material = new THREE.MeshLambertMaterial(
-        {
-            color: 0xff4488
-        }
-    );
-    var physijsMaterial = Physijs.createMaterial(
-        material,
-        0.6, // high friction
-        0.3 // low restitution
-    );
+    var size = 4;
+    letters = buildText('3DWeb.cc');
 
-    var mesh = new Physijs.BoxMesh( cubeGeometry, physijsMaterial );
-
-    scene.add(mesh);
-
+    var posX = -size * (letters.length / 2);
+    
+    letters.map(function(letter, index) {
+        scene.add(letter);/*
+        letter.position.set(
+            posX + (size * index) + 10,
+            0,
+            0
+        );*/
+    });
+    
     scene.simulate();
+
+    function random()
+    {
+        var result = '';
+
+        while (result.length < 2)
+        {
+            result = (Math.round(Math.random()*1000).toString().slice(0,2))
+        }
+
+        return result; 
+    }
+
+    function buildText(text)
+    {
+        var letters = text.split('').map(function(letter, index) {
+            var material = new THREE.MeshLambertMaterial(
+                {
+                    color: ('#FF' + random() + random() )
+                }
+            );
+            
+            var physijsMaterial = Physijs.createMaterial(
+                material,
+                0.6, // high friction
+                0.3 // low restitution
+            );
+                
+            var letterGeometry = new THREE.BoxGeometry(
+                size, size, size
+            ); /*.TextGeometry(
+                letter,
+                {
+                    size : 2,
+                    height: 1
+                }
+            );*/
+
+            var letterMesh = new Physijs.BoxMesh( letterGeometry, physijsMaterial );
+
+            return letterMesh;
+        });
+
+        return letters;
+    }
 
     function animate()
     {
 
+        scene.simulate();
+        
         renderer.render(scene, camera);
 
         requestAnimationFrame(animate);
