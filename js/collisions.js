@@ -44,12 +44,13 @@ function startScene() {
     var posX = -size * (letters.length / 2);
     
     letters.map(function(letter, index) {
-        scene.add(letter);/*
+        scene.add(letter);
         letter.position.set(
             posX + (size * index) + 10,
             0,
             0
-        );*/
+        );
+        letter.__dirtyPosition = true;
     });
     
     scene.simulate();
@@ -81,15 +82,13 @@ function startScene() {
                 0.3 // low restitution
             );
                 
-            var letterGeometry = new THREE.BoxGeometry(
-                size, size, size
-            ); /*.TextGeometry(
+            var letterGeometry = new THREE.TextGeometry(
                 letter,
                 {
                     size : 2,
                     height: 1
                 }
-            );*/
+            );
 
             var letterMesh = new Physijs.BoxMesh( letterGeometry, physijsMaterial );
 
