@@ -38,7 +38,7 @@ function startScene() {
     theLight2.position.set(10, 10, -20);
     scene.add(theLight2);
 
-    var size = 4;
+    var size = 6;
     letters = buildText('3DWeb.cc');
 
     var posX = -size * (letters.length / 2);
@@ -46,12 +46,36 @@ function startScene() {
     letters.map(function(letter, index) {
         scene.add(letter);
         letter.position.set(
-            posX + (size * index) + 10,
-            0,
+            posX + (size * index),
+            10,
             0
         );
         letter.__dirtyPosition = true;
     });
+
+    // ground
+
+    var groundMaterial = new THREE.MeshLambertMaterial({ color: 0x4433aa });
+    var ground = new Physijs.BoxMesh(
+        new THREE.PlaneGeometry(20, 20),
+        Physijs.createMaterial(groundMaterial, 0.1, 2.0)
+    );
+    ground.rotateX(-Math.PI/2);
+    ground.__dirtyRotation = true;
+    ground.position.setY(-4);
+    ground.__dirtyPosition = true;
+
+    var ground2 = new Physijs.BoxMesh(
+        new THREE.PlaneGeometry(100, 40),
+        Physijs.createMaterial(groundMaterial, 0.1, 0.6)
+    );
+    ground2.rotateX( -Math.PI / 2 );
+    ground2.__dirtyRotation = true;
+    ground2.position.setY(-12);
+    ground2.__dirtyPosition = true;
+    
+    scene.add(ground);
+    scene.add(ground2);
     
     scene.simulate();
 
@@ -78,7 +102,7 @@ function startScene() {
             
             var physijsMaterial = Physijs.createMaterial(
                 material,
-                0.6, // high friction
+                1.2, // high friction
                 0.3 // low restitution
             );
                 
