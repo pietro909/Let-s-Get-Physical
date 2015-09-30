@@ -77,8 +77,6 @@ function startScene() {
     scene.add(ground);
     scene.add(ground2);
     
-    scene.simulate();
-
     function random()
     {
         var result = '';
